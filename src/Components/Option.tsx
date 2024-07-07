@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Select, {CSSObjectWithLabel, MultiValue} from 'react-select'
 
 interface QueryProps {
@@ -24,8 +24,15 @@ const Option: React.FC<OptionProps> = ({
                                            query, queryParameter, setQuery
                                        }) => {
 
+    const [buttonColor, setButtonColor] = useState('#2a2e34')
+    const [underline, setUnderline] = useState('')
+
     if (!(queryParameter in query)) {
         throw new Error(`Invalid query parameter: ${queryParameter}`);
+    }
+
+    const quoteChosen = (): boolean =>{
+        return query['quote'] !== 'None'
     }
 
     const key = queryParameter as keyof QueryProps;
@@ -59,6 +66,14 @@ const Option: React.FC<OptionProps> = ({
     }
 
     const handleButtonChange = (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (buttonColor === '#2a2e34'){
+            setButtonColor('#3F6945')
+            setUnderline('underline')
+        }else{
+            setButtonColor('#2a2e34')
+            setUnderline('')
+        }
+
         if (query.dailyQuote === "true") {
             setQuery(prevQuery => ({
                 ...prevQuery,
@@ -102,33 +117,37 @@ const Option: React.FC<OptionProps> = ({
                        onChange={handleInputChange}/>
             </div>
         )
-    } else if (optionType === "select") {
+    } else if (optionType === "select" && options) {
+        if(quoteChosen() && description == 'Author' && options.length > 0){
+            options = [options[0]] as string[] | number[]
+        }
         if (options && options.every(option => typeof option === "string")) {
+
             return (
-                <div className={"w-full overflow-auto flex justify-center"}>
+                <div className={"w-full flex justify-between items-center"}>
                     <label>{description}</label>
-                    <div>
-                        <select
-                            value={query[key]}
-                            onChange={handleSelectChange}
-                            className={"overflow-hidden text-sm w-1/2"}
-                        >
-                            <option value="">{description}</option>
-                            {options.map((option, index) => (
-                                <option key={`${option}${index}`} value={option}>
-                                    {shortenWord(option)}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    <select
+                        value={query[key]}
+                        onChange={handleSelectChange}
+                        className={"overflow-hidden text-sm w-1/2 h-8 rounded-md p-1 bg-code-bg"}
+                    >
+                        {options.map((option, index) => (
+                            <option key={`${option}${index}`} value={option}>
+                                {shortenWord(option)}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             )
         } else throw new Error("No options provided for select type")
     } else if (optionType === "button") {
         return (
-            <div className={"flex"}>
-                <h2>{description}</h2>
-                <button onClick={handleButtonChange}>{description}</button>
+            <div className={"w-full flex items-center justify-between"}>
+                <h2 style={{textDecoration: underline}}>{description}</h2>
+                <button
+                    className={'h-8 flex items-center border-interact-border border-1'}
+                    style={{backgroundColor: buttonColor}}
+                    onClick={handleButtonChange}>{description}</button>
             </div>
         )
     } else if (optionType === "multiselect" && options && options.every(option => typeof option === "number")) {
@@ -142,14 +161,15 @@ const Option: React.FC<OptionProps> = ({
 
 
         return (
-            <div className={"w-full flex justify-center"}>
+            <div className={"w-full flex justify-between items-center"}>
                 <label>{description}</label>
-                <Select options={newOptions}
+                <Select options={quoteChosen() ? [] : newOptions}
                         styles={{
                             control: (baseStyles, state) => ({
                                 ...baseStyles,
                                 color: 'black',
                                 backgroundColor: 'white',
+                                maxWidth: '14rem',
                             }),
                             menu: (baseStyles) => ({
                                 ...baseStyles,

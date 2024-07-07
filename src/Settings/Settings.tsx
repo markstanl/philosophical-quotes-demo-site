@@ -15,19 +15,20 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({
-                                            setRequest
-                                        }) => {
+                                               setRequest
+                                           }) => {
 
     const [query, setQuery] = useState<QueryProps>({
         theme: "default",
-        author: "",
-        quote: "",
+        author: "None",
+        quote: "None",
         dailyQuote: "false",
         includeIDs: "",
         excludeIDs: ""
     })
 
     const quotesArray = [
+        'None',
         "One must imagine Sisyphus happy.",
         "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion.",
         "The unexamined life is not worth living.",
@@ -89,7 +90,7 @@ const Settings: React.FC<SettingsProps> = ({
         "If people never did silly things nothing intelligent would ever get done."
     ]
 
-    const authorsArray = ["Albert Camus", "Socrates", "Plato", "Friedrich Nietzsche", "Jean-Jacques Rousseau", "Aristotle", "Bertrand Russell", "Immanuel Kant", "Daniel Quinn", "John Rawls", "David Hume",
+    const authorsArray = ['None', "Albert Camus", "Socrates", "Plato", "Friedrich Nietzsche", "Jean-Jacques Rousseau", "Aristotle", "Bertrand Russell", "Immanuel Kant", "Daniel Quinn", "John Rawls", "David Hume",
         "René Descartes", "Martin Heidegger", "Ludwig Wittgenstein", "Peter Singer", "Richard Dawkins", "Oliver Goldsmith", "Jeremy Bentham", "Alastair Norcross", "Jean-Paul Sartre", "Simone de Beauvoir ", "Simone de Beauvoir", "Harry Frankfurt", "Sam Harris", "Martha Nussbaum"]
 
     const themeNames: string[] = [
@@ -170,17 +171,42 @@ const Settings: React.FC<SettingsProps> = ({
         "ambient_gradient",
     ];
 
+    /**
+     * Function to parse the query object to become a valid request
+     * @returns the parsed query object
+     */
+    const parseQuery = (): QueryProps => {
+        const parsingQuery: QueryProps = {...query};
+        for (const key in parsingQuery) {
+            if (parsingQuery.hasOwnProperty(key)) {
+                //Parses all the queries
+                const queryKey = key as keyof QueryProps;
+                if (parsingQuery[queryKey] === 'None') parsingQuery[queryKey] = '';
+                if (parsingQuery['quote'] !== 'None' && (key != 'theme' && key != 'quote' && key != 'dailyQuote')){
+                    parsingQuery[queryKey] = '';
+                }
+                //Changes none to '' and removes everything but the theme if quote exists respectively
+            }
+            if (key === 'quote' && parsingQuery['quote'] !== '') {
+                //Adds the quotes needed for the request
+                parsingQuery['quote'] = '\"' + parsingQuery['quote'] + '\"';
+            }
+        }
+        return parsingQuery;
+    }
+
     return (
-        <div className={"w-full h-screen border-slate-500 border-2 rounded-xl items-center " +
-            "flex flex-col"}>
-            <h1>Settings</h1>
-            <Option description={"Theme*"} optionType={"select"} options={themeNames} query={query}
+        <div className={"w-full h-full border-slate-500 border-2 rounded-xl items-center " +
+            "flex flex-col p-2 gap-2"}>
+            <h1 className={'text-xl'}>Settings</h1>
+            <hr className={'w-full border-white'}/>
+            <Option description={"Theme"} optionType={"select"} options={themeNames} query={query}
                     queryParameter={"theme"} setQuery={setQuery}/>
-            <Option description={"Author"} optionType={"select"} options={authorsArray} query={query}
-                    queryParameter={"author"}
-                    setQuery={setQuery}/>
             <Option description={"Quote"} optionType={"select"} options={quotesArray} query={query}
                     queryParameter={"quote"}
+                    setQuery={setQuery}/>
+            <Option description={"Author"} optionType={"select"} options={authorsArray} query={query}
+                    queryParameter={"author"}
                     setQuery={setQuery}/>
             <Option description={"Daily Quote"} optionType={"button"} query={query} queryParameter={"dailyQuote"}
                     setQuery={setQuery}/>
@@ -190,16 +216,8 @@ const Settings: React.FC<SettingsProps> = ({
                     setQuery={setQuery} options={Array.from({length: quotesArray.length}, (_, i) => i + 1)}/>
 
             <button className={"bg-blue-500 text-white rounded-lg p-2"}
-                onClick={() => setRequest(query)}
-            >Save
+                    onClick={() => setRequest(parseQuery())}>Save
             </button>
-
-            <p>theme{query.theme}</p>
-            <p>author{query.author}</p>
-            <p>quote{query.quote}</p>
-            <p>dailyquote{query.dailyQuote}</p>
-            <p>include{query.includeIDs}</p>
-            <p>exclude{query.excludeIDs}</p>
         </div>
     )
 }

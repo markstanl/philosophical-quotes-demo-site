@@ -5,7 +5,12 @@ const config: Config = {
     "./src/**/*.{ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'code-bg': '#2a2e34',
+        'interact-border': '#CCD0D6'
+      },
+    },
   },
   plugins: [],
 }
