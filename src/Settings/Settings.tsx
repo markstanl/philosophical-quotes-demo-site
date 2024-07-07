@@ -27,8 +27,7 @@ const Settings: React.FC<SettingsProps> = ({
         excludeIDs: ""
     })
 
-    const quotesArray = [
-        'None',
+    const quotesArray =["None",
         "One must imagine Sisyphus happy.",
         "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion.",
         "The unexamined life is not worth living.",
@@ -39,7 +38,7 @@ const Settings: React.FC<SettingsProps> = ({
         "God is dead. God remains dead. And we have killed him.",
         "Man is born free, and everywhere he is in chains.",
         "Revolt is the right of the people",
-        "The first man who, having fenced in a piece of land, said 'This is mine,' and found people naive enough to believe him, was the real founder of civil society.",
+        "The first man who, having fenced in a piece of land, said 'This is mine,' and found people naive enough to believe him,  was the real founder of civil society.",
         "It is the mark of an educated mind to be able to entertain a thought without accepting it.",
         "I would never die for my beliefs because I might be wrong.",
         "Live your life as though your every act were to become a universal law.",
@@ -87,11 +86,18 @@ const Settings: React.FC<SettingsProps> = ({
         "You can do what you decide to do — but you cannot decide what you will decide to do.",
         "You can’t really change the heart without telling a story.",
         "Knowledge is no guarantee of good behavior, but ignorance is a virtual guarantee of bad behavior.",
-        "If people never did silly things nothing intelligent would ever get done."
-    ]
+        "If people never did silly things nothing intelligent would ever get done.",
+        "Only a people trained to accept being ruled by a violent power structure can really question someone’s right and need to forcefully defend herself against oppression.",
+        "Every existing thing is born without reason, prolongs itself out of weakness, and dies by chance.",
+        "I like to occupy a position where even if I am attacked and rejected, I am not contaminated.",
+        "We feel free because we lack the very language to articulate our unfreedom.",
+        "It is the greatest happiness of the greatest number that is the measure of right and wrong.",
+        "Tyranny and anarchy are never far apart.",
+        "If people are good only because they fear punishment, and hope for reward, then we are a sorry lot indeed.",]
 
-    const authorsArray = ['None', "Albert Camus", "Socrates", "Plato", "Friedrich Nietzsche", "Jean-Jacques Rousseau", "Aristotle", "Bertrand Russell", "Immanuel Kant", "Daniel Quinn", "John Rawls", "David Hume",
-        "René Descartes", "Martin Heidegger", "Ludwig Wittgenstein", "Peter Singer", "Richard Dawkins", "Oliver Goldsmith", "Jeremy Bentham", "Alastair Norcross", "Jean-Paul Sartre", "Simone de Beauvoir ", "Simone de Beauvoir", "Harry Frankfurt", "Sam Harris", "Martha Nussbaum"]
+
+    const authorsArray = ["None", "Albert Camus", "Socrates", "Plato", "Friedrich Nietzsche", "Jean-Jacques Rousseau", "Aristotle", "Bertrand Russell", "Immanuel Kant", "Daniel Quinn", "John Rawls", "David Hume",
+        "René Descartes", "Martin Heidegger", "Ludwig Wittgenstein", "Peter Singer", "Richard Dawkins", "Oliver Goldsmith", "Jeremy Bentham", "Alastair Norcross", "Jean-Paul Sartre", "Simone de Beauvoir ", "Simone de Beauvoir", "Harry Frankfurt", "Sam Harris", "Martha Nussbaum", "Peter Gelderloos", "Slavoj Žižek", "Albert Einstein"]
 
     const themeNames: string[] = [
         "default",

@@ -1,41 +1,43 @@
-const sqlite3 = require('sqlite3').verbose();
+import { Database, OPEN_READONLY } from 'sqlite3';
 
 // Open the database
-let db = new sqlite3.Database('./quotes.db', sqlite3.OPEN_READONLY, (err: { message: any; }) => {
-  if (err) {
-    console.error(err.message);
-  }
-  console.log('Connected to the SQLite database.');
+let db = new Database('./quotes.db', OPEN_READONLY, (err: Error | null) => {
+    if (err) {
+        console.error(err.message);
+    } else {
+        console.log('Connected to the SQLite database.');
+    }
 });
 
 let quotesArray = [];
 
 // Query the database
 db.serialize(() => {
-  db.all(`SELECT * FROM quotes`, (err: { message: any; }, rows: any[]) => {
-    if (err) {
-      console.error(err.message);
-    }
-    quotesArray = rows;
-    //printQuoteArray(quotesArray);
-    //printAuthorsArray(quotesArray);
-    printIDArray(quotesArray);
-  });
+    db.all(`SELECT * FROM quotes`, (err: Error | null, rows: any[]) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            quotesArray = rows;
+            printQuoteArray(quotesArray);
+            printAuthorsArray(quotesArray);
+            printIDArray(quotesArray);
+        }
+    });
 });
 
 // Close the database
-db.close((err: { message: any; }) => {
-  if (err) {
-    console.error(err.message);
-  }
+db.close((err: Error | null) => {
+    if (err) {
+        console.error(err.message);
+    }
 });
 
 const printQuoteArray = (array: any[]) => {
-  let quoteArrayString: string = "[";
+  let quoteArrayString: string = '["None", \n';
   let authors: string[] = [];
 
   array.forEach((quote: { quote: string; }) => {
-    quoteArrayString += `"${quote.quote}", `;
+    quoteArrayString += `${quote.quote}, \n`;
   });
   quoteArrayString = quoteArrayString.slice(0, -2);
   quoteArrayString += "]";
@@ -43,7 +45,7 @@ const printQuoteArray = (array: any[]) => {
 }
 
 const printAuthorsArray = (array: any[]) => {
-  let authorsArrayString: string = "[";
+  let authorsArrayString: string = '["None", \n';
   let authors: string[] = [];
 
   array.forEach((quote: { author: string; }) => {
@@ -52,7 +54,7 @@ const printAuthorsArray = (array: any[]) => {
     }
   })
   authors.forEach((author: string) => {
-    authorsArrayString += `"${author}", `;
+    authorsArrayString += `"${author}", \n`;
   });
   authorsArrayString = authorsArrayString.slice(0, -2);
   authorsArrayString += "]";
