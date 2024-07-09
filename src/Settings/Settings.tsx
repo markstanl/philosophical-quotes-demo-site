@@ -189,7 +189,7 @@ const Settings: React.FC<SettingsProps> = ({
                 //Parses all the queries
                 const queryKey = key as keyof QueryProps;
                 if (query[queryKey] === 'None') parsingQuery[queryKey] = '';
-                if (query['quote'] !== 'None' && (key != 'theme' && key != 'quote' && key != 'dailyQuote')){
+                if (query['quote'] !== 'None' && (key != 'theme' && key != 'quote')){
                     parsingQuery[queryKey] = '';
                 }
                 //Changes none to '' and removes everything but the theme if quote exists respectively
