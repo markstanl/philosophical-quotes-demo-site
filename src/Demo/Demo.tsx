@@ -43,6 +43,12 @@ const Demo: React.FC<DemoProps> = ({requestQuery}) => {
         return [`![Philosophical Quote](${requestString})`, credits]
     }
 
+    const getHTMLUrl = (requestString: string): string => {
+        return `<a href="https://github.com/markstanl/github-readme-philosophical-quotes">
+    <img src="${requestString}" alt="Philosophical Quote"> 
+</a>`
+    }
+
     const [svgUrl, setSvgUrl] = useState<string>("");
 
     useEffect(() => {
@@ -53,9 +59,12 @@ const Demo: React.FC<DemoProps> = ({requestQuery}) => {
         <div className={"w-full h-full rounded-lg flex items-center " +
             "flex-col border-slate-400 border-2 p-2"}>
             <div>
-                <div className={'w-full overflow-hidden'}>
+                <h1 className={'text-2xl font-bold mb-2 w-full text-center'}>Preview</h1>
+                <hr className={'w-full border-white mb-4'}/>
+                <div className={'w-full overflow-hidden mb-4'}>
                     <SvgComponent requestURL={svgUrl}/>
                 </div>
+                <h2 className={`text-2xl font-bold`}>Markdown</h2>
                 <p className={`m-2 bg-code-bg text-sm font-mono rounded-md flex flex-row align-top p-2`}>
                     <div>
                         {getMarkdownUrl(svgUrl)[0]}
@@ -65,6 +74,14 @@ const Demo: React.FC<DemoProps> = ({requestQuery}) => {
                     </div>
                     <img src={copyImage} alt={"copy"} className={"h-3.5 hover:cursor-pointer"}
                          onClick={() => navigator.clipboard.writeText(getMarkdownUrl(svgUrl).join('\n\n'))}/>
+                </p>
+                <h2 className={`text-2xl font-bold`}>HTML</h2>
+                <p className={`m-2 bg-code-bg text-sm font-mono rounded-md flex flex-row align-top p-2`}>
+                    <div>
+                        {getHTMLUrl(svgUrl)}
+                    </div>
+                    <img src={copyImage} alt={"copy"} className={"h-3.5 hover:cursor-pointer"}
+                         onClick={() => navigator.clipboard.writeText(getHTMLUrl(svgUrl))}/>
                 </p>
             </div>
         </div>

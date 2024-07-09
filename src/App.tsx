@@ -2,6 +2,8 @@ import {useState} from 'react'
 import Settings from './Settings/Settings'
 import Demo from './Demo/Demo'
 import './App.css'
+import Button from '@/Components/Button'
+import github from '@/assets/github.png'
 
 function App() {
     interface QueryProps {
@@ -27,19 +29,19 @@ function App() {
         <div className={"flex flex-row w-screen"}>
             <div className={"w-1/5"}/>
             <div className={"flex flex-col items-center w-4/5 mt-16"}>
-                <h1 className={"text-green-300"}>Github ReadMe Philosophical Quotes</h1>
-                <div className={"flex justify-center gap-6"}>
-                    <p>Space for icons</p>
-                    <p>other icon</p>
+                <h1 className={"text-white font-bold text-4xl mb-4"}>Github ReadMe Philosophical Quotes</h1>
+                <div className={"flex justify-center gap-6 m-2"}>
+                    <Button text={"View on GitHub"}
+                            link={'https://github.com/markstanl/github-readme-philosophical-quotes'} image={github}/>
                 </div>
-                <div className={"flex w-full h-full gap-4"}>
+                <div className={"flex w-full h-full gap-4 mt-2"}>
                     <Settings setRequest={setRequestQuery}/>
                     <Demo requestQuery={requestQuery}/>
                 </div>
             </div>
 
             <div className={"w-1/5"}>
-                <p>Night</p>
+                {/*{<p>Night</p>}*/}
             </div>
         </div>
     )

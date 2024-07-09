@@ -183,28 +183,30 @@ const Settings: React.FC<SettingsProps> = ({
      */
     const parseQuery = (): QueryProps => {
         const parsingQuery: QueryProps = {...query};
+        console.log(parsingQuery)
         for (const key in parsingQuery) {
             if (parsingQuery.hasOwnProperty(key)) {
                 //Parses all the queries
                 const queryKey = key as keyof QueryProps;
-                if (parsingQuery[queryKey] === 'None') parsingQuery[queryKey] = '';
-                if (parsingQuery['quote'] !== 'None' && (key != 'theme' && key != 'quote' && key != 'dailyQuote')){
+                if (query[queryKey] === 'None') parsingQuery[queryKey] = '';
+                if (query['quote'] !== 'None' && (key != 'theme' && key != 'quote' && key != 'dailyQuote')){
                     parsingQuery[queryKey] = '';
                 }
                 //Changes none to '' and removes everything but the theme if quote exists respectively
             }
-            if (key === 'quote' && parsingQuery['quote'] !== '') {
+            if (key === 'quote' && query['quote'] !== 'None') {
                 //Adds the quotes needed for the request
                 parsingQuery['quote'] = '\"' + parsingQuery['quote'] + '\"';
             }
         }
+        console.log(parsingQuery)
         return parsingQuery;
     }
 
     return (
         <div className={"w-full h-full border-slate-500 border-2 rounded-xl items-center " +
             "flex flex-col p-2 gap-2"}>
-            <h1 className={'text-xl'}>Settings</h1>
+            <h1 className={'text-2xl font-bold'}>Settings</h1>
             <hr className={'w-full border-white'}/>
             <Option description={"Theme"} optionType={"select"} options={themeNames} query={query}
                     queryParameter={"theme"} setQuery={setQuery}/>
@@ -221,7 +223,7 @@ const Settings: React.FC<SettingsProps> = ({
             <Option description={"Exclude IDs"} optionType={"multiselect"} query={query} queryParameter={"excludeIDs"}
                     setQuery={setQuery} options={Array.from({length: quotesArray.length}, (_, i) => i + 1)}/>
 
-            <button className={"bg-blue-500 text-white rounded-lg p-2"}
+            <button className={"bg-blue-500 hover:bg-blue-700 text-white rounded-lg p-2"}
                     onClick={() => setRequest(parseQuery())}>Save
             </button>
         </div>

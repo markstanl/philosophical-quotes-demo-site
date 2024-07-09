@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Select, {CSSObjectWithLabel, MultiValue} from 'react-select'
 
 interface QueryProps {
@@ -26,6 +26,20 @@ const Option: React.FC<OptionProps> = ({
 
     const [buttonColor, setButtonColor] = useState('#2a2e34')
     const [underline, setUnderline] = useState('')
+    const[selectedOptions, setSelectedOptions] = useState<MultiValue<any>>([]);
+
+    useEffect(() => {
+        // sets the multi select children to be nothing if the quote gets picked
+        if (quoteChosen()) {
+            setSelectedOptions([]);
+            if(optionType === 'multiselect') {
+                setQuery(prevQuery => ({
+                    ...prevQuery,
+                    [queryParameter]: ""
+                }));
+            }
+        }
+    }, [query.quote]);
 
     if (!(queryParameter in query)) {
         throw new Error(`Invalid query parameter: ${queryParameter}`);
@@ -49,11 +63,14 @@ const Option: React.FC<OptionProps> = ({
     }
 
     const handleMultiSelectChange = (selectedOptions: MultiValue<any>) => {
-        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
-        setQuery(prevQuery => ({
-            ...prevQuery,
-            [queryParameter]: selectedValues.join(',')
-        }));
+        if (!quoteChosen()) {
+            setSelectedOptions(selectedOptions);
+            const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
+            setQuery(prevQuery => ({
+                ...prevQuery,
+                [queryParameter]: selectedValues.join(',')
+            }));
+        }
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,9 +168,10 @@ const Option: React.FC<OptionProps> = ({
             </div>
         )
     } else if (optionType === "multiselect" && options && options.every(option => typeof option === "number")) {
-        const newOptions: { value: string, label: string }[] = options.map((option) => {
-            return {value: option.toString(), label: option.toString()}
-        });
+        const newOptions: { value: string, label: string }[] = quoteChosen() ? [] : options.map(option => ({
+            value: option.toString(),
+            label: option.toString()
+        }));
 
         const baseStyles: CSSObjectWithLabel = {
             //add fonts mavbe?
@@ -163,13 +181,14 @@ const Option: React.FC<OptionProps> = ({
         return (
             <div className={"w-full flex justify-between items-center"}>
                 <label>{description}</label>
-                <Select options={quoteChosen() ? [] : newOptions}
+                <Select options={newOptions}
                         styles={{
                             control: (baseStyles, state) => ({
                                 ...baseStyles,
                                 color: 'black',
-                                backgroundColor: 'white',
+                                backgroundColor: '#2a2e34',
                                 maxWidth: '14rem',
+                                borderColor: 'transparent',
                             }),
                             menu: (baseStyles) => ({
                                 ...baseStyles,
@@ -188,6 +207,7 @@ const Option: React.FC<OptionProps> = ({
                                             : 'white',
                             }),
                         }}
+                        value={quoteChosen() ? [] : selectedOptions}
                         isMulti={true}
                         onChange={handleMultiSelectChange}
                         isOptionDisabled={(option) => !isOptionValid(option.value)}
